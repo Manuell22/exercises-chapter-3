@@ -53,20 +53,40 @@ class Polynomial:
     
     def __sub__(self, other):
         if isinstance(other,Polynomial):
-            common = min(self.degree, other.degree)+1
+            common = min(self.degree(), other.degree())+1
             coefs = tuple(a - b for a,b in zip(self.coefficients[:common], other.coefficients[:common]))
-            coefs += self.coefficients[common:] - other.coefficients[common:]
+            coefs += self.coefficients[common:] + tuple(-i for i in other.coefficients[common:])
             return Polynomial(coefs)
         
         if isinstance(other,Number):
-            return Polynomial((self.coefficients[0] - other, self.coefficients[1:]))
+            return Polynomial((self.coefficients[0] - other,) + self.coefficients[1:])
         else:
             return NotImplemented
         
     def __rsub__(self,other):
-        coefs = []
-        coefs += [i*-1 for i in self.coefficients]
-        return Polynomial(coefs) + other
+        coefs = [-i for i in self.coefficients]
+        coefs[0] = other + coefs[0]
+        return Polynomial(tuple(coefs))
+    
+    def __mul__(self,other):
+        if isinstance(other,Polynomial):
+            coefs = [0] *(len(self.coefficients)+len(other.coefficients)-1)
+            for i in range(len(self.coefficients)):
+                for j in range(len(other.coefficients)):
+                    coefs[i+j] += other.coefficients[j]*self.coefficients[i]
+            return Polynomial(tuple(coefs))
+        
+        if isinstance(other,Number):
+            coefs = [other*i for i in self.coefficients]
+            return Polynomial(tuple(coefs))
+        
+    
+    
+        
+        
+
+    
+
     
         
 
