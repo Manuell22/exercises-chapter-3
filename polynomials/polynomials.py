@@ -4,7 +4,12 @@ from numbers import Number
 class Polynomial:
 
     def __init__(self, coefs):
-        self.coefficients = coefs
+        if len(coefs)>1 and coefs[-1]==0:
+            self.coefficients = coefs[:-1]
+        elif len(coefs)==0:
+            self.coefficients =(0,)
+        else:
+            self.coefficients = coefs
 
     def degree(self):
         return len(self.coefficients) - 1
@@ -79,6 +84,57 @@ class Polynomial:
         if isinstance(other,Number):
             coefs = [other*i for i in self.coefficients]
             return Polynomial(tuple(coefs))
+        else:
+            return NotImplemented
+    def __rmul__(self,other):
+        return self*other
+    def __pow__(self,other):
+        if isinstance(other,int):
+            output = self
+            if other>=0:
+                if other == 0:
+                    return 1
+                if other == 1:
+                    return self
+                else:
+                    for i in range(other-1):
+                        output=output*self
+                    return output
+
+        else:
+            return NotImplemented
+        
+    def __call__(self,other):
+        if isinstance(other,Number):
+            p = 0
+            result = 0
+            coefs = self.coefficients
+            for i in coefs:
+                
+                result += (i * (other**p))
+                p+=1
+                print(result)
+            return result
+        else:
+            return NotImplemented
+    
+    def dx(self):
+        if isinstance(self,Number):
+            return 0
+        terms =[]
+        for power,coeff in enumerate(self.coefficients):
+            terms += [power*coeff]
+        return Polynomial(tuple(terms[1:]))
+
+def derivative(poly):
+    return poly.dx()
+
+
+
+    
+
+
+
         
     
     

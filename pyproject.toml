@@ -8,4 +8,4 @@ version = "0.1"
 dependencies = ["numpy"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["polynomials"]
+packages = ["polynomials","shape"]
